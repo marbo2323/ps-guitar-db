@@ -13,6 +13,6 @@ public interface ModelJpaRepository extends JpaRepository<Model, Long> {
 	
 	List<Model> findByPriceGreaterThanEqualAndPriceLessThanEqual(BigDecimal lowest, BigDecimal highest); 
 	
-	//List<Model> finfByModelTypeNameIn(List<String> types); // this causes  Error creating bean with name 'modelRepository'
+	List<Model> findByModelTypeNameIn(List<String> types); 
 	
 }

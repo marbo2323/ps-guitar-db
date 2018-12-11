@@ -2,6 +2,7 @@ package com.guitar.db;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNotSame;
 
 import java.util.List;
 
@@ -35,6 +36,22 @@ public class LocationPersistenceTests {
 	}
 
 	@Test
+	public void testJpaFindNot() {
+		List<Location> locations = locationJpaRepository.findByStateNot("Utah");
+		assertNotNull(locations);
+		
+		assertNotSame("Utah", locations.get(0).getState());
+	}
+
+	@Test
+	public void testJpaFindOr() {
+		List<Location> locations = locationJpaRepository.findByStateIsOrCountryEquals("Utah", "Utah");
+		assertNotNull(locations);
+		
+		assertEquals("Utah", locations.get(0).getState());
+	}
+
+	@Test
 	@Transactional
 	public void testSaveAndGetAndDelete() throws Exception {
 		Location location = new Location();
@@ -58,8 +75,29 @@ public class LocationPersistenceTests {
 	public void testFindWithLike() throws Exception {
 		List<Location> locs = locationJpaRepository.findByStateLike("New%");
 		assertEquals(4, locs.size());
+		
+		locs = locationJpaRepository.findByStateStartingWith("New");
+		assertEquals(4, locs.size());
+		
+		locs = locationJpaRepository.findByStateIgnoreCaseStartingWith("new");
+		assertEquals(4, locs.size());
+		
+		locs = locationJpaRepository.findByStateNotLike("New%");
+		assertEquals(46, locs.size());
+		
+		locs = locationJpaRepository.findTop5ByStateStartingWith("New");
+		assertEquals(4, locs.size());
+		
+		
+		locs = locationJpaRepository.findByStateNotLikeOrderByStateAsc("New%");
+		assertEquals(46, locs.size());
+		
+		locs.forEach((location)->{
+			System.out.println(location.getState());	
+		});
 	}
-
+	
+	
 	@Test
 	@Transactional  //note this is needed because we will get a lazy load exception unless we are in a tx
 	public void testFindWithChildren() throws Exception {

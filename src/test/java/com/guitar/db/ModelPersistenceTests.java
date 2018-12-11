@@ -25,6 +25,8 @@ public class ModelPersistenceTests {
 	@Autowired
 	private ModelRepository modelRepository;
 
+
+	
 	@PersistenceContext
 	private EntityManager entityManager;
 
@@ -55,6 +57,7 @@ public class ModelPersistenceTests {
 	public void testGetModelsInPriceRange() throws Exception {
 		List<Model> mods = modelRepository.getModelsInPriceRange(BigDecimal.valueOf(1000L), BigDecimal.valueOf(2000L));
 		assertEquals(4, mods.size());
+		
 	}
 
 	@Test
@@ -68,4 +71,16 @@ public class ModelPersistenceTests {
 		List<Model> mods = modelRepository.getModelsByType("Electric");
 		assertEquals(4, mods.size());
 	}
+	
+	/*
+	@Test
+	public void testFindByModelTypes() {
+		List<String> mts = new ArrayList<>();
+		mts.add("Acoustic");
+		mts.add("Electric");
+		
+		List<Model> mods = modelJpaRepository.finfByModelTypeNameIn(mts);
+		//assertEquals(2, mods.size());
+		assertTrue(mods.size() > 0);
+	}*/
 }
